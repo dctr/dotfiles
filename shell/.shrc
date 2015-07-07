@@ -1,0 +1,78 @@
+# Aliases
+
+alias gping='ping www.google.com'
+alias ls='ls --color=auto'
+alias l="ls -bCF"
+alias ll="ls -hl"
+alias la="ls -hAl"
+alias myip="wget -q -O - http://ifconfig.me/ip"
+
+[[ -x /usr/share/vim/vim7*/macros/less.sh ]] && alias less="/usr/share/vim/vim7*/macros/less.sh"
+[[ -x /usr/bin/icdiff ]] && alias diff='/usr/bin/icdiff'
+[[ -x /usr/bin/ccat ]] && alias cat='/usr/bin/ccat'
+
+if [[ -x /usr/bin/trash ]]; then
+  alias rm="trash"
+else
+  echo "WARNING: trash-cli not installed, rm is permanent!"
+fi
+
+if [[ -x /usr/bin/git ]]; then
+  alias commit='git add --all && git commit -a && git push'
+  
+  function merge() {
+    previousBranch=`git rev-parse --abbrev-ref HEAD`
+    git checkout $2
+    git pull
+    git merge $1
+    git push
+    git checkout $previousBranch
+  }
+fi
+
+function ex () {
+  if [[ -f $1 ]]; then
+    case $1 in
+      *.tar.bz2)   tar xjf $1   ;;
+      *.tar.gz)    tar xzf $1   ;;
+      *.7z)        7z x $1      ;;
+      *.bz2)       bunzip2 $1   ;;
+      *.gz)        gunzip $1    ;;
+      *.rar)       unrar x $1   ;;
+      *.tar)       tar xf $1    ;;
+      *.tbz2)      tar xjf $1   ;;
+      *.tgz)       tar xzf $1   ;;
+      *.xz)        unxz $1      ;;
+      *.zip)       unzip $1     ;;
+      *.Z)         uncompress $1;;
+      *)           echo "'$1' cannot be extracted via ex()" ;;
+    esac
+  else
+    echo "'$1' is not a valid file"
+  fi
+}
+
+function psgrep () {
+  ps aux | grep -v "grep" | grep "$1"
+}
+
+
+# Environment
+
+export EDITOR="vim"
+
+[[ -d ~/.local/bin ]] && PATH=$PATH:~/.local/bin
+
+if [[ "$(id -u)" != "0" && -x /usr/bin/node && -x /usr/bin/npm ]]; then
+  mkdir -p "${HOME}/.npm-packages"
+  NPM_PACKAGES="${HOME}/.npm-packages"
+  npm config set prefix ${HOME}/.npm-packages
+  NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
+  PATH="$NPM_PACKAGES/bin:$PATH"
+  MANPATH="$NPM_PACKAGES/share/man:$(manpath)"
+fi
+
+if which ruby >/dev/null && which gem >/dev/null; then
+  PATH="$(ruby -rubygems -e 'puts Gem.user_dir')/bin:$PATH"
+fi
+
