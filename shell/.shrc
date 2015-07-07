@@ -7,7 +7,7 @@ alias ll="ls -hl"
 alias la="ls -hAl"
 alias myip="wget -q -O - http://ifconfig.me/ip"
 
-[[ -x /usr/share/vim/vim7*/macros/less.sh ]] && alias less="/usr/share/vim/vim7*/macros/less.sh"
+[ -x /usr/share/vim/vim7*/macros/less.sh ] && alias less="/usr/share/vim/vim7*/macros/less.sh"
 [[ -x /usr/bin/icdiff ]] && alias diff='/usr/bin/icdiff'
 [[ -x /usr/bin/ccat ]] && alias cat='/usr/bin/ccat'
 
